@@ -140,7 +140,7 @@ class MemoryListController extends Controller
     {
         $request->validate([
             'answers' => 'required|array',
-            'answers.*' => 'required|string',
+            'answers.*' => 'nullable|string',
         ]);
 
         $memoryList = Auth::user()->memoryLists()->with('items')->findOrFail($id);
@@ -152,7 +152,9 @@ class MemoryListController extends Controller
 
         foreach ($items as $index => $item) {
             $userAnswer = $request->answers[$index] ?? '';
-            $isCorrect = trim(strtolower($userAnswer)) === trim(strtolower($item->content));
+            // Ensure empty answers are treated as empty strings
+            $userAnswer = is_string($userAnswer) ? trim($userAnswer) : '';
+            $isCorrect = !empty($userAnswer) && strtolower($userAnswer) === strtolower(trim($item->content));
 
             if ($isCorrect) {
                 $correct++;
