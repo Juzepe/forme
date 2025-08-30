@@ -10,7 +10,7 @@
     <div class="max-w-4xl mx-auto">
       <div class="space-y-6">
         <div class="text-center py-4">
-          <h2 class="text-2xl font-semibold mb-4">Memory Test</h2>
+          <h2 class="text-2xl font-semibold text-primary mb-4">{{ memoryList.title }}</h2>
           <p class="text-muted-foreground">
             Enter the items in the correct order from memory. You can leave fields blank if you're unsure - just submit what you remember!
           </p>
