@@ -63,6 +63,7 @@
                 required
                 :placeholder="`Enter item ${index + 1}`"
                 class="text-lg"
+                autocomplete="off"
               />
             </div>
           </div>
