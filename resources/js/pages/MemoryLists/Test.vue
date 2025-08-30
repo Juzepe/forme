@@ -12,7 +12,10 @@
         <div class="text-center py-4">
           <h2 class="text-2xl font-semibold mb-4">Memory Test</h2>
           <p class="text-muted-foreground">
-            Enter the items in the correct order from memory. Try to remember exactly what was written and in what order!
+            Enter the items in the correct order from memory. You can leave fields blank if you're unsure - just submit what you remember!
+          </p>
+          <p class="text-sm text-muted-foreground mt-2">
+            Tip: Empty fields will be marked as incorrect, but you can still submit your test.
           </p>
         </div>
 
@@ -30,7 +33,6 @@
                 :id="`item-${index}`"
                 v-model="answers[index]"
                 type="text"
-                required
                 :placeholder="`Enter item ${index + 1}`"
                 class="text-lg"
                 autocomplete="off"
@@ -93,8 +95,11 @@ onMounted(() => {
 const submitTest = () => {
   processing.value = true
   
+  // Ensure all answers are strings, converting undefined/null to empty strings
+  const processedAnswers = answers.value.map(answer => answer || '')
+  
   router.post(route('memory-lists.check-test', props.memoryList.id), {
-    answers: answers.value
+    answers: processedAnswers
   }, {
     onFinish: () => {
       processing.value = false
