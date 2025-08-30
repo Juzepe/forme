@@ -1,48 +1,18 @@
 <template>
-  <AppLayout :title="`Test Memory - ${memoryList.title}`">
+  <AppLayout :title="`Memory Test - ${memoryList.title}`">
     <template #header>
-      <Heading>Test Your Memory</Heading>
+      <Heading title="Memory Test" />
       <p class="text-muted-foreground mt-1">
         {{ memoryList.title }} - {{ memoryList.items.length }} items
       </p>
     </template>
 
     <div class="max-w-4xl mx-auto">
-      <div v-if="!showTest" class="space-y-6">
-        <div class="text-center py-8">
-          <h2 class="text-2xl font-semibold mb-4">Study the List</h2>
-          <p class="text-muted-foreground mb-6">
-            Take your time to memorize the items in the correct order. When you're ready, click "Start Test" to begin.
-          </p>
-          
-          <div class="grid gap-4 md:grid-cols-2 max-w-2xl mx-auto">
-            <Card
-              v-for="item in memoryList.items"
-              :key="item.id"
-              class="text-center"
-            >
-              <CardHeader>
-                <div class="flex items-center justify-center gap-3">
-                  <div class="flex-shrink-0 w-10 h-10 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-lg font-bold">
-                    {{ item.position }}
-                  </div>
-                  <CardTitle class="text-xl">{{ item.content }}</CardTitle>
-                </div>
-              </CardHeader>
-            </Card>
-          </div>
-          
-          <Button @click="startTest" class="mt-8" size="lg">
-            Start Test
-          </Button>
-        </div>
-      </div>
-
-      <div v-else class="space-y-6">
+      <div class="space-y-6">
         <div class="text-center py-4">
           <h2 class="text-2xl font-semibold mb-4">Memory Test</h2>
           <p class="text-muted-foreground">
-            Enter the items in the correct order. Try to remember exactly what was written!
+            Enter the items in the correct order from memory. Try to remember exactly what was written and in what order!
           </p>
         </div>
 
@@ -69,9 +39,6 @@
           </div>
 
           <div class="flex justify-center gap-4 pt-6">
-            <Button type="button" variant="outline" @click="showTest = false">
-              Back to Study
-            </Button>
             <Button type="submit" :disabled="processing">
               {{ processing ? 'Checking...' : 'Check Answers' }}
             </Button>
@@ -89,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { router } from '@inertiajs/vue3'
 import AppLayout from '@/layouts/AppLayout.vue'
 import Heading from '@/components/Heading.vue'
@@ -97,9 +64,6 @@ import TextLink from '@/components/TextLink.vue'
 import Button from '@/components/ui/button/Button.vue'
 import Input from '@/components/ui/input/Input.vue'
 import Label from '@/components/ui/label/Label.vue'
-import Card from '@/components/ui/card/Card.vue'
-import CardHeader from '@/components/ui/card/CardHeader.vue'
-import CardTitle from '@/components/ui/card/CardTitle.vue'
 
 interface MemoryListItem {
   id: string
@@ -118,15 +82,13 @@ const props = defineProps<{
   memoryList: MemoryList
 }>()
 
-const showTest = ref(false)
 const processing = ref(false)
 const answers = ref<string[]>([])
 
-const startTest = () => {
-  showTest.value = true
+onMounted(() => {
   // Initialize answers array with empty strings
   answers.value = new Array(props.memoryList.items.length).fill('')
-}
+})
 
 const submitTest = () => {
   processing.value = true
